@@ -1,6 +1,6 @@
 # LLM Wiki
 
-My take on Andrej Karpathy's LLM wiki, extended with conventions refined from running a live wiki — a named UPDATE operation for conversational facts, `status` frontmatter for project lifecycle tracking, an automatic LINT counter, lazy session-start loading, a subagent briefing pattern via `VISITING.md`, and a bootstrapping prompt that asks for domain context before scaffolding anything.
+My take on Andrej Karpathy's LLM wiki, extended with conventions refined from running a live wiki — a named UPDATE operation for conversational facts, an automatic LINT counter, lazy session-start loading, a subagent briefing pattern via `VISITING.md`, and a bootstrapping prompt that asks for domain context before scaffolding anything.
 
 > **Credit:** Original concept by [Andrej Karpathy](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f)
 
@@ -21,14 +21,9 @@ Karpathy's gist describes the core pattern well — the three-layer architecture
 **New operations**
 - **UPDATE** — a named operation for pushing a fact into the wiki without a source file. In practice, plenty of knowledge arrives in conversation (a decision made in a meeting, a number that changed) and disappears into chat history without this. Karpathy's original only covers INGEST, QUERY, and LINT.
 
-**Better project lifecycle tracking**
-- **`status: active | complete | archived`** added to page frontmatter. Without it, completed projects accumulate as phantom "active" content and the wiki gradually loses signal.
-- **Staleness rule** — a page is stale if `updated` is >60 days old and `status` is still `active`. Gives LINT a concrete anchor instead of relying on judgment.
-
 **Smarter session management**
 - **Lazy session start** — `hot.md` is always read eagerly; `index.md` and the log are only read if `hot.md` doesn't resolve the question. Keeps short sessions cheap.
 - **Inbox check at session start** — the original suggests draining the inbox only when you trigger an ingest. Checking at every session start means files never sit unclassified for more than one session.
-- **`hot.md` regeneration conditions** — explicit triggers (last-updated >7 days, or >3 active threads now done) rather than the vague "if stale."
 
 **Operational hygiene**
 - **LINT counter** — an `Ingests since last lint: N` line in `hot.md` that the agent increments on each ingest and resets after a lint pass. The original suggests periodic linting but provides no mechanism to track when it's due.

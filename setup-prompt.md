@@ -73,24 +73,19 @@ Every wiki page should include frontmatter so the LLM (and tools like Obsidian D
 ---
 title: <Human-readable title>
 type: project | system | concept | person | decision | analysis | runbook | overview
-status: active | complete | archived
 tags: [<relevant tags>]
 sources: [<list of raw/ filenames that informed this page>]
 updated: YYYY-MM-DD
 ---
 ```
 
-The `status` field matters more than it looks. Projects complete, but pages don't automatically reflect that — without status, the wiki gradually fills with stale "active" content and you lose track of what's current vs. historical.
-
 Suggested body conventions:
 - Lead with a 2–3 sentence summary (no heading needed)
 - Use `[[WikiLink]]` syntax for all cross-references to other wiki pages
 - Use `> **Source:** raw/path/to/file` blockquotes when citing specific facts
-- Flag contradictions, open questions, and stale claims with `> **Conflict:**`, `> **Open question:**`, `> **May be stale:**` blockquotes
+- Flag contradictions and open questions with `> **Conflict:**`, `> **Open question:**` blockquotes
 - Log unresolved conflicts in `hot.md` under `## Open Conflicts` until you resolve them — don't let the agent silently pick a winner
 - Update the `updated` field any time a page is materially edited
-
-**Staleness rule:** a page is stale if its `updated` date is >60 days old and `status` is still `active`. Flag it on the next LINT pass.
 
 ---
 
@@ -158,7 +153,6 @@ Triggered when you say "lint the wiki", or automatically when the `Ingests since
 1. Read all pages in `wiki/`
 2. Check for:
    - Contradictions between pages
-   - Stale pages (updated >60 days ago, status still `active`)
    - Orphan pages (no inbound links)
    - Concepts mentioned but lacking their own page
    - Missing cross-references between related pages
@@ -220,8 +214,7 @@ At some point you may want small tools that help the agent operate more efficien
 - **Download images locally.** In Obsidian Settings → Files and links, set the attachment folder to `raw/assets/`. Bind "Download attachments for current file" to a hotkey. After clipping an article, hit the hotkey and all images save to disk. LLMs can't read markdown with inline images in one pass — the workaround is to have the agent read the text first, then view referenced images separately for additional context.
 - **Obsidian's graph view** is the best way to see the shape of your wiki — what's connected to what, which pages are hubs, which are orphans.
 - **Marp** is a markdown slide format with an Obsidian plugin. Useful for generating presentations directly from wiki content.
-- **Dataview** is an Obsidian plugin that runs queries over page frontmatter. If your agent writes YAML frontmatter (tags, dates, status), Dataview can generate dynamic tables and lists — e.g. all `status: active` projects, or all pages updated in the last 30 days.
-- **The wiki is just a git repo.** You get version history, branching, and collaboration for free.
+- **Dataview** is an Obsidian plugin that runs queries over page frontmatter. If your agent writes YAML frontmatter (tags, dates), Dataview can generate dynamic tables and lists — e.g. all pages updated in the last 30 days.
 
 ---
 
